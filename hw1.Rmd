@@ -1,0 +1,122 @@
+---
+title: "myHomework"
+output: html_document
+---
+
+```{r question 1 and 2}
+
+library(readxl)
+Typical_Employee_Survey_Data <- read_excel('/Users/syedmumtaz/Downloads/Typical_Employee_Survey_Data.xlsx')
+
+
+df <- Typical_Employee_Survey_Data
+
+######question 1 
+names(df) <- c("age", "gender", "satisfaction", "job characteristics", "tenure", "promotion likihood", "decision making", "budgetary inclusion", "pride in org", "loyalty", "coworker relationship")
+
+######question 2 
+stat <- c('minimum', 'lower-hinge', 'median', 'upper-hinge','maximum')
+
+
+fivepoint_age <- data.frame(stat,fivenum(df$age))
+names(fivepoint_age) <- c('stat', 'age value')
+
+fivepoint_gender <- data.frame(stat,fivenum(df$gender))
+names(fivepoint_gender) <- c('stat', 'gender value')
+
+fivepoint_satisfaction <- data.frame(stat,fivenum(df$satisfaction))
+names(fivepoint_satisfaction) <- c('stat', 'satisfaction value')
+
+fivepoint_job_characteristics <- data.frame(stat,fivenum(df$`job characteristics`))
+names(fivepoint_job_characteristics) <- c('stat', 'job characteristic value')
+
+fivepoint_tenure <- data.frame(stat,fivenum(df$`tenure`))
+names(fivepoint_tenure) <- c('stat', 'tenure value')
+
+fivepoint_promotion_liklihood <- data.frame(stat,fivenum(df$`promotion liklihood`))
+names(fivepoint_promotion_liklihood) <- c('stat', 'promotion likihood value')
+
+fivepoint_decision_making <- data.frame(stat,fivenum(df$`decision making`))
+names(fivepoint_decision_making) <- c('stat', 'decision making value')
+
+fivepoint_budgetary_inclusion <- data.frame(stat,fivenum(df$`budgetary inclusion`))
+names(fivepoint_budgetary_inclusion) <- c('stat', 'budgetary inclusion value')
+
+fivepoint_pride_in_org <- data.frame(stat,fivenum(df$`pride in org`))
+names(fivepoint_pride_in_org) <- c('stat', 'pride in org value')
+
+fivepoint_loyalty <- data.frame(stat,fivenum(df$`loyalty`))
+names(fivepoint_loyalty) <- c('stat', 'loyalty value')
+
+fivepoint_coworker_relationship <- data.frame(stat,fivenum(df$`coworker relationship`))
+names(fivepoint_coworker_relationship) <- c('stat', 'coworker relationship value')
+
+print(fivepoint_age)
+boxplot(df$age, main = 'Age Boxplot')
+print(fivepoint_gender)
+boxplot(df$gender, main = 'Gender Boxplot')
+print(fivepoint_satisfaction)
+boxplot(df$satisfaction, main = 'Satisfaction Boxplot')
+print(fivepoint_job_characteristics)
+boxplot(df$`job characteristics`, main = 'Job Characteristic Boxplot')
+print(fivepoint_tenure)
+boxplot(df$tenure, main = 'Tenure Boxplot')
+print(fivepoint_promotion_liklihood)
+boxplot(df$`promotion likihood`, main = 'Promotion Liklihood Boxplot')
+print(fivepoint_decision_making)
+boxplot(df$`decision making`, main = 'Decision Making Boxplot')
+print(fivepoint_budgetary_inclusion)
+boxplot(df$`budgetary inclusion`, main = 'Budgetary Inclusion Boxplot')
+print(fivepoint_pride_in_org)
+boxplot(df$`pride in org`, main = 'Pride in Organization Boxplot')
+print(fivepoint_loyalty)
+boxplot(df$loyalty, main = 'Loyalty Boxplot')
+print(fivepoint_coworker_relationship)
+boxplot(df$`coworker relationship`, main = 'Coworker Relationship Boxplot')
+
+
+###### question 3 
+df$gender <- as.factor(df$gender)
+df$satisfaction <- as.factor(df$satisfaction)
+df$`job characteristics` <- as.factor(df$`job characteristics`)
+df$`promotion likihood` <- as.factor(df$`promotion likihood`)
+df$`decision making` <- as.factor(df$`decision making`)
+df$`budgetary inclusion` <- as.factor(df$`budgetary inclusion`)
+df$`pride in org` <- as.factor(df$`pride in org`)
+df$loyalty <- as.factor(df$loyalty)
+df$`coworker relationship` <- as.factor(df$`coworker relationship`)
+
+
+##### question 4 
+hist(df$age, main = "Age of Participants", col = 'Blue', labels = TRUE)
+plot(df$gender, main = "Gender", col = 'Green')
+plot(df$satisfaction, main = "Job Satisfaction ", col = 'Red')
+plot(df$`job characteristics`, main = "Characteristics important to Participants", col = 'Green')
+hist(df$tenure, main = "Time with Firm", col = 'orange', las = 1)
+plot(df$`promotion likihood`, main = "liklihood of Promotion", col = 'Green')
+plot(df$`decision making`, main = "Inclusion in Decision Making", col = 'Green')
+plot(df$`budgetary inclusion`, main = "Inclusin in Budgetary Decisions", col = 'blue')
+plot(df$`pride in org`, main = "Pride in Organization", col = 'blue')
+plot(df$loyalty, main = "Loyalty to Oragnization", col = 'blue')
+plot(df$`coworker relationship`, main = "Relationship with Coworkers", col = 'blue')
+
+##### question 5
+
+plot(df$age, df$tenure, main = "Age vs Tenure", xlab = 'Age', ylab = 'Tenure')
+
+
+plot(df$age, df$satisfaction, main = "Age vs satisfaction", xlab = 'Age', ylab = 'Satisfaction')
+
+plot(df$age, df$`promotion likihood`, main = "Age vs Promotion Liklihood", xlab = 'Age', ylab = 'Promotion Likihood')
+
+plot(df$age, df$loyalty, main = "Age vs Loyalty", xlab = 'Age', ylab = 'Loyalty')
+
+plot(df$age, df$`decision making`, main = "Age vs Decision Making", xlab = 'Age', ylab = 'Decision Making')
+
+
+```
+
+
+
+
+
