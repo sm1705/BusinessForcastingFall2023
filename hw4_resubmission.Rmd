@@ -1,0 +1,100 @@
+---
+title: "hw4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(TTR)
+library(fpp)
+library(fpp2)
+
+
+library(readxl)
+df <- read.csv('/Users/syedmumtaz/Desktop/hw3_1979-2021_us_gold_price.csv')
+
+df1 <- ts(df, start = 1979, end = 2021, frequency = 12, class = "ts")
+
+##checking the attributes for the time series
+print(attributes(df1))
+
+#plotting the time series
+plot(df1)
+
+#looking at the plot of the time series itself it looks like the price of gold is highly dependent on trend we can see that right before covid the price of gold was high but during covid the price of gold dropped. And then we see that after covid the price came back up. We see a similar trend around 2008 during housing crisis so it seems like the general economic climate has an impact on the price of gold. Also We do not really see seasonality in the price of gold either. 
+
+#plotting ACF for the time series
+acf(df1)
+
+#looking at the ACF plot, it seems like our intuition that there is no seasonality in our data was correct. We do not see any seasonality in the data as there are no jumps or drops every few periods. Also, since the lines in the ACF plot are above the reference line, this shows that correlation exists between the current price of gold and the previous price of gold, which could mean that the current price is dependent on the previous price which makes sense in an economic sense. 
+
+
+
+#model 1 - Mean Forecast 
+mean_forecast <- meanf(df1,5)
+plot(mean_forecast)
+#The mean forecast output is showing the forecasts and prediction interval for an IID model applied to a dataset. In this case I have chosen a forecast period of 5 months from the latest data that we have. The mean model is taking the mean of the historical points and then adding an error to determine the next periods' forecasts. Based on the model we expect the the gold price to be around $680 with 80% confidence that the price will be between 87 and 1273. 
+
+#model 2 - Naive model 
+naive_forecast <- naive(df1,5)
+plot(naive_forecast)
+#The naive forecast model is showing the forecast and prediction interval applied to a time series dataset. In the model, we are looking at what occurred in the previous period to determine what will occur in the next period. In this case, we are predicting that the next five periods' gold prices will be $1863 for each of the periods. The confidence interval of each period is different compared to the mean forecast model where each forecasted period had the same confidence 
+
+
+#model 3 - Random Walk 
+rwf_forecast <- rwf(df1, drift = TRUE,5)
+plot(rwf_forecast)
+
+#The random walk model is similar to the naive model but adds in some drift to the forecast, whereas the drift for the naive model is zero. The output is showing we expect the gold price to fluctuate between 1867 and 1879 over the next five periods. Again the confidence interval is fluctuating between the periods. Also this model, unlike the other models has different point forecasts for each period. 
+
+#model 4 - Seasonal Naive Model 
+snaive_forecast <- snaive(df1,5)
+plot(snaive_forecast)
+
+#seaonal naive is again similar to naive and random walk but it adds in a seosonal component. Checks over different periods to determine if seosonality impacts the forecast and adds that into the prediction. Adding in the seasonal component, we see the forecast is lower than the other forecasts we had, with the point forecast ranging from 1609 to 1768
+
+
+#plotting the models together
+plot(naive_forecast)
+lines(mean_forecast$mean,col="red")
+lines(rwf_forecast$mean,col="green")
+lines(snaive_forecast$mean, col = "orange")
+
+
+#Model 5 - Moving Average
+MA5_forecast <- ma(df1,order=5) #meaning window is 5
+lines(MA5_forecast,col="Green")
+MA9_forecast <- ma(df1,order=9)
+lines(MA9_forecast,col="Blue")
+
+#Adding moving averages to the plot we see that the moving averages are very close to the actual values that we are seeing. It seems like the moving average 5 line is moving more closely to what we are actually seeing but both are moving fairly well together
+
+#exponential smoothing models 
+forecast_hw <- HoltWinters(df1)
+plot(forecast_hw, col = "orange")
+
+#using Holts_winters we see that the forecasted values move fairly closely with the actual observed values. Holts_winters is expanding on exponential smoothing by adding in trend and seasonality components. It provides and alpha, beta and gamma coefficient to determine the level, trend and seasonality components of our forecast. Since all coefficients are between zero and one, we can see that the model is finding a trend and seasonality component to our dataset and thus will add it to our forecast. 
+
+#Choosing Forecasting model
+
+#looking at the different forecasting measures that we have discussed, I believe the best one to use in our case will be Root Mean Square errors. The reason for this is that RMSE penalized large errors while still keeping the units as the original dataset. 
+
+accuracy_mean_forecast=accuracy(mean_forecast)[2]
+accuracy_naive_forecast=accuracy(naive_forecast)[2]
+accuracy_rwf_forecast=accuracy(rwf_forecast)[2]
+accuracy_snaive_forecast=accuracy(snaive_forecast)[2]
+
+#mean forecast RMFE
+accuracy_mean_forecast
+
+#Naive forecast RMFE
+accuracy_naive_forecast
+
+#RWF forecast RMFE
+accuracy_rwf_forecast
+
+#snaive forecast RMFE
+accuracy_snaive_forecast
+
+#comparing the accuracy measures for each of these, the lowest RMFE is for the RWF forecast and therefore that will be the best model to use in this case
+
+```
