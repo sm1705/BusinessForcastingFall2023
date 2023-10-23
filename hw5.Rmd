@@ -1,0 +1,61 @@
+---
+title: "hw5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(TTR)
+library(fpp)
+library(fpp2)
+
+
+library(readxl)
+df <- read.csv('/Users/syedmumtaz/Desktop/hw3_1979-2021_us_gold_price.csv')
+
+df1 <- ts(df, start = 1979, end = 2021, frequency = 12, class = "ts")
+
+##checking the attributes for the time series
+print(attributes(df1))
+
+plot(df1)
+acf(df1)
+
+stl_decomp <- stl(df1,s.window ="periodic")
+
+attributes(stl_decomp)
+
+stl_decomp$time.series
+
+plot(stl_decomp)
+#looking at the plot for the STL decomp, it seems like the data highly impacted by trend with only about 5-10 points added by seasonality. The seasonality is really only adding in a little bit of noise, but it does not have a major impact on the gold price, which is something that we would expect. This is because the highs and the lows of the trend plot are matching very closely with the highs and the lows of the actual data plot. For the remainder, we see early on that the remainder is low, but as we see the price of gold increase before 2010, the remainder starts to fluctuate as well. 
+
+
+#plotting seasonally adjusted data 
+tmp <- seasadj(stl_decomp)
+plot(df1)
+lines(tmp, col = 'Red')
+
+#looking at the plot when taking out seasonality, the plot is very similar to the actual data plot suggesting that the seasonality does not impact the data a lot, which is matching our expectation and what we saw from the stl plot 
+
+#forecasting using the decomposition model 
+f_stl <- forecast(stl_decomp)
+f_stl
+f_stl$method
+#this is showing that it is a multiplicative model
+plot(f_stl)
+
+accuracy(f_stl)
+
+#In an earlier analysis, we chose to use RMSE to choose which forecasting model to use. Looking at the RMSE for the decomposition model, we get a value of 42.14381. In the other forecasts we chose to use RWF forecast since it had the lowest RMSE value of 42.95329 but the decomposition forecast actually has a lower error. This is surprising as we would expect it to have a higher error since errors in any of the components will be multiplied suggesting that we have very few errors in our forecast. 
+
+plot(df1)
+lines(f_stl$fitted, col='Red')
+
+#looking at the plot with the forecasted data in red, it does look like the forecasted value matches closely with the actual value we have been seeing 
+
+
+
+
+
+
+```
