@@ -1,0 +1,68 @@
+---
+title: "hw6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(TTR)
+library(fpp)
+library(fpp2)
+
+
+library(readxl)
+df <- read.csv('/Users/syedmumtaz/Desktop/hw3_1979-2021_us_gold_price.csv')
+
+df1 <- ts(df, start = 1979, end = 2021, frequency = 12, class = "ts")
+
+##checking the attributes for the time series
+print(attributes(df1))
+
+plot(df1)
+acf(df1)
+
+tsdisplay(df1)
+#PACF plot is showing that the p value can be anywhere from 0 to 4
+#the q value can be anywhere from 0 to 2
+
+auto.arima(df1,stepwise=FALSE, approximation=FALSE, trace = TRUE)
+
+#Based on the auto.arima function the best combination is ARIMA(2,1,2)(1,0,0)[12]
+#This is the best because it has the lowest BIC value as compared to any other combination
+# Shows that the best p value is 2, we have a b vaue of 1 which means we need to do one ndiff to make the 
+#data stationary and the q value is 2 
+
+
+fit3 <- Arima(df1, order=c(2,1,2), seasonal=c(1,0,0))
+
+#residual analysis
+res <- fit3$residuals
+plot(res, type= 'p')
+#looking at the plot of the residuals it seems like the data is random. There is sort of a trend towards the beginning of the data but the most recent data shows random residuals
+
+hist(res)
+#the histogram shows that the residuals are normal and are central around 0 
+
+#since the residuals are random and are normal the residual analysis passes for ARIMA
+
+fcast <- forecast(fit3, h=5)
+
+plot(df1)
+lines(fcast$fitted, col = 'red')
+
+#looking at the observed vs predicted values, it seems like the model is predicting the values fairly well as the red fitted line is following the actual plot fairly closely
+
+
+print(fcast)
+plot(fcast)
+# Lets do some forecasting
+
+
+accuracy(fit3)
+#overall the error values for each of the accuracy measures are fairly low. 
+
+
+
+
+
+
+```
